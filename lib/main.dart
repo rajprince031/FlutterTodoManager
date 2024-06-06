@@ -134,7 +134,7 @@ class MyTodo extends State<TodoDashboard> {
                                       onPressed: () async{
                                         var time = DateTime.now();
                                         String time_formate = (time.hour.toString() + ":" + time.minute.toString()
-                                         +"     "+time.day.toString() +"/"+time.month.toString()+"/"
+                                         +"     "+time.day.toString() +"-"+time.month.toString()+"-"
                                         +time.year.toString());
                                        String taskName = enter_task.text.trim();
                                        String TaskTime = time_formate.trim();
