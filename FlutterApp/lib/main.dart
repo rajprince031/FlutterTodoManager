@@ -7,12 +7,12 @@ import 'login.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  runApp(myApp(token: prefs.getString('token')));
+  runApp(MyApp(token: prefs.getString('token')));
 }
-class myApp extends StatelessWidget{
+class MyApp extends StatelessWidget{
 
   final token;
-  const myApp({
+  const MyApp({
     @required
   this.token,
     Key? key,
