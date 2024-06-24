@@ -45,10 +45,10 @@ class _TodoLoginPageState extends State<TodoLoginPage> {
         var myToken = jsonResponse['token'];
         prefs.setString('token', myToken);
         Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) {
-            return dashboard(token: myToken);
-          }),
+            context,
+            MaterialPageRoute(builder: (context) {
+              return dashboard(token: myToken);
+            }),
                 (Route<dynamic> route) => false
         );
       } else {
@@ -63,17 +63,23 @@ class _TodoLoginPageState extends State<TodoLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return Scaffold(
-      body: Container(
-          child :Column(
+        body: Container(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: screenHeight * 0.1),
-              Text("TODO APPs",style:TextStyle(
-                  fontSize:60,color:Colors.white,fontWeight:FontWeight.bold
+              Text("TODO APPs", style: TextStyle(
+                  fontSize: 60, color: Colors.white, fontWeight: FontWeight.bold
               )
               ),
               SizedBox(height: screenHeight * 0.05),
@@ -85,7 +91,7 @@ class _TodoLoginPageState extends State<TodoLoginPage> {
                   controller: email,
                   decoration: InputDecoration(
                     hintText: 'Enter your email',
-                    errorText: isValidate? 'Please filled this field' : null,
+                    errorText: isValidate ? 'Please filled this field' : null,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -114,7 +120,9 @@ class _TodoLoginPageState extends State<TodoLoginPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Enter your password',
-                    errorText: isValidate? 'Enter password was incorrect' : null,
+                    errorText: isValidate
+                        ? 'Enter password was incorrect'
+                        : null,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -157,7 +165,7 @@ class _TodoLoginPageState extends State<TodoLoginPage> {
                   );
                 },
                 child: Text(
-                  'Don\'t have an account? Sign up',
+                  "Don't have an account? Sign up",
                   style: TextStyle(
                     color: Colors.blue[700],
                   ),
@@ -165,8 +173,8 @@ class _TodoLoginPageState extends State<TodoLoginPage> {
               ),
             ],
           ),
-          width : double.infinity,
-          height : double.infinity,
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.blue, Colors.purple],
