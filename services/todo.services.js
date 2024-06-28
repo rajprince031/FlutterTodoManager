@@ -8,9 +8,9 @@ class ToDoServices{
         return await createTodo.save();
     }
 
-    static async getUserData(userId){
-        const getUserData = await ToDoModel.find({userId});
-        return getUserData;
+    static async getToDoData(Id){
+        const getTodo = await ToDoModel.find({Id});
+        return getTodo;
     }
 }
 

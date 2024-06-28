@@ -3,7 +3,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import './Profile.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'config.dart';
+import './config.dart';
 
 
 class dashboard extends StatefulWidget {
@@ -17,32 +17,49 @@ class dashboard extends StatefulWidget {
 }
 
 class _dashboard extends State<dashboard> {
-  late String userId;
-  List? items;
+  late String Id;
+
+  List<dynamic> items = [];
+
+  // Map<String, dynamic> items = {};
 
   @override
   void initState() {
     super.initState();
     Map<String, dynamic> jwtDecodeToken = JwtDecoder.decode(widget.token);
-    userId = jwtDecodeToken['_id'];
-    getTodo(userId);
+    Id = jwtDecodeToken['_id'];
+    print("userid --------- " + Id);
+    getTodo(Id);
   }
 
-  void getTodo(userId) async {
-    var regBody = {
-      "userId": userId
-    };
-    var response = await http.post(Uri.parse(getTodoList),
+  Future<void> getTodo(String Id) async {
+    try {
+      var regBody = {
+        "userId": Id
+      };
+      var response = await http.get(
+        Uri.parse(getTodoList + "?userId=${Id}"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode(regBody)
-    );
+        // body: jsonEncode({"userId": Id})
+      );
+      print('Response status: ${response.statusCode}');
+      // var jsonResponse = jsonDecode(response.body);
 
-    var jsonResponse = jsonDecode(response.body);
-    items = jsonResponse['success'];
-    
-    setState(() {
-
-    });
+      // items = jsonResponse['success'];
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        print("Printing the length of the items ");
+        print('Parsed JSON: $jsonResponse');
+        setState(() {
+          items = jsonResponse['success'];
+          print(items);
+        });
+      } else {
+        print("failed to load todo");
+      }
+    } catch (error) {
+      print("Error occur in get Todo :- $error");
+    }
   }
 
   @override
@@ -78,8 +95,19 @@ class _dashboard extends State<dashboard> {
             ),
           ),
         ),
-        body: Center(
-            child: Text("hello")
+        body: Padding(
+
+            padding: const EdgeInsets.all(8.0),
+            child: items == null ? null : ListView.builder(
+                itemCount: items!.length,
+                itemBuilder: (context, int index) {
+                  return ListTile(
+                      leading: Text('${index}'),
+                      title: Text("${items![index]['title']}"),
+                      subtitle: Text("${items![index]['description']}")
+                  );
+                }
+            )
         )
     );
   }

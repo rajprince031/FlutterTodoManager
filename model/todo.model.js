@@ -21,4 +21,4 @@ const todoSchema = new Schema({
 
 const ToDoModel = db.model('todoList',todoSchema);
 
-module.exports = ToDoModel
+module.exports = ToDoModel;

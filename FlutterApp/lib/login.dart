@@ -88,26 +88,31 @@ class _TodoLoginPageState extends State<TodoLoginPage> {
                   maxWidth: screenWidth * 0.8,
                 ),
                 child: TextField(
-                  controller: email,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your email',
-                    errorText: isValidate ? 'Please filled this field' : null,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+
+                    controller: email,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your email',
+                      errorText: isValidate ? 'Please filled this field' : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      contentPadding: EdgeInsets.all(12),
+                      prefixIcon: Icon(Icons.email),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue[700]!),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    contentPadding: EdgeInsets.all(12),
-                    prefixIcon: Icon(Icons.email),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue[700]!),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                    onTap: () {
+                      isValidate = false;
+                      setState(() {});
+                    }
                 ),
               ),
               SizedBox(height: screenHeight * 0.02),
@@ -184,7 +189,6 @@ class _TodoLoginPageState extends State<TodoLoginPage> {
 
           ),
         )
-
     );
   }
 }
