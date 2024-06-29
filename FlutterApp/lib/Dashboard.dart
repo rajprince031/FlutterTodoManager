@@ -19,7 +19,7 @@ class dashboard extends StatefulWidget {
 class _dashboard extends State<dashboard> {
   late String Id;
 
-  List<dynamic> items = [];
+  List<dynamic>? items = [];
 
   // Map<String, dynamic> items = {};
 
@@ -28,31 +28,27 @@ class _dashboard extends State<dashboard> {
     super.initState();
     Map<String, dynamic> jwtDecodeToken = JwtDecoder.decode(widget.token);
     Id = jwtDecodeToken['_id'];
-    print("userid --------- " + Id);
+    // print("userid --------- " + Id);
     getTodo(Id);
   }
 
   Future<void> getTodo(String Id) async {
     try {
-      var regBody = {
-        "userId": Id
-      };
+      // print("functon Id " + Id);
       var response = await http.get(
-        Uri.parse(getTodoList + "?userId=${Id}"),
-        headers: {"Content-Type": "application/json"},
-        // body: jsonEncode({"userId": Id})
+        Uri.parse(getTodoList + "?userId=$Id"),
       );
       print('Response status: ${response.statusCode}');
-      // var jsonResponse = jsonDecode(response.body);
+      var jsonResponse = jsonDecode(response.body);
 
-      // items = jsonResponse['success'];
+      items = jsonResponse['success'];
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        print("Printing the length of the items ");
-        print('Parsed JSON: $jsonResponse');
+        // print("Printing the length of the items ");
+        print('Parsed JSON: ${jsonResponse['status']}');
         setState(() {
           items = jsonResponse['success'];
-          print(items);
+          // print(items); //--printing the items
         });
       } else {
         print("failed to load todo");

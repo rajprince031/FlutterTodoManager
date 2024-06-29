@@ -14,16 +14,18 @@ exports.createTodo = async (req,res,next)=>{
 }
 
 exports.getUserData = async (req,res) =>{
-    const {userId} = req.body;
     try{
+        const userId = req.query;
+
+        // console.log("I am trying to print userId",userId);
         let todoData = await ToDoServices.getToDoData(userId);
-        console.log('i am at the backend buddy');
-        console.log(`Todos fetched: ${todoData}`);//debug line
+        // console.log('i am at the backend buddy');
+        // console.log(`Todos fetched: ${todoData}`);//debug line
         if(todoData.length > 0) {
-            console.log("My length is greater than zero");
+            // console.log("My length is greater than zero");
             res.json({status:true,success:todoData});
         }else{
-            console.log("My length is zero");
+            // console.log("My length is zero");
             res.status(404).json({status:true,success:[]});
         }
 

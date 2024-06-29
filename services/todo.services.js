@@ -9,7 +9,8 @@ class ToDoServices{
     }
 
     static async getToDoData(Id){
-        const getTodo = await ToDoModel.find({Id});
+        const getTodo = await ToDoModel.find(Id);
+        // console.log("see the response of DataBase",getTodo);
         return getTodo;
     }
 }
