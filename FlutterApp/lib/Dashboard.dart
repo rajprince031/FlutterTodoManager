@@ -18,10 +18,8 @@ class dashboard extends StatefulWidget {
 
 class _dashboard extends State<dashboard> {
   late String Id;
-
   List<dynamic>? items = [];
 
-  // Map<String, dynamic> items = {};
 
   @override
   void initState() {
@@ -32,9 +30,8 @@ class _dashboard extends State<dashboard> {
     getTodo(Id);
   }
 
-  // Hello all
-
-  Future<void> getTodo(String Id) async {
+//implement the get user list from the DataBase
+  void getTodo(String Id) async {
     try {
       // print("functon Id " + Id);
       var response = await http.get(
@@ -59,6 +56,87 @@ class _dashboard extends State<dashboard> {
       print("Error occur in get Todo :- $error");
     }
   }
+
+  // end the get user list function
+
+  //upload new Todo Task
+  void uploadTask(String title, String description) async {
+    var regBody = {
+      "userId": Id,
+      "title": title,
+      "description": description
+    };
+    var response = await http.post(Uri.parse(addTodo),
+        body: jsonEncode(regBody),
+        headers: {'content-type': 'application/json'}
+    );
+    var jsonResponse = jsonDecode(response.body);
+    // print("hey I am trying to upload new todo"); //debug line
+    print(jsonResponse['status']); //chceking response
+    if (jsonResponse['status']) {
+      setState(() {
+        getTodo(Id);
+      });
+      Navigator.of(context).pop();
+    } else {
+      print("something went wrong in uploadTask Function");
+    }
+  }
+
+  //function of upload new Todo Task end
+
+
+// add todo dialog box function start
+  void addNewTodo() {
+    final taskController = TextEditingController();
+    final descriptionController = TextEditingController();
+    // bool validateTitle = false;
+    // bool validateDescription = false;
+    showDialog(context: context, builder: (context) {
+      return AlertDialog(
+          title: Text("Add New Task"),
+          content: SingleChildScrollView(
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+
+                children: [
+                  TextField(
+                    controller: taskController,
+                    decoration: InputDecoration(
+                      hintText: 'Task Title',
+                    ),
+
+                  ),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      hintText: 'Task Description',
+                    ),
+                  ),
+                ]
+            ),
+          ), //column
+          actions: [
+            new ElevatedButton(
+                child: Text("Add Task"),
+                onPressed: () {
+                  if (taskController.text.isNotEmpty &&
+                      descriptionController.text.isNotEmpty) {
+                    uploadTask(taskController.text,
+                        descriptionController.text);
+                  } else {
+                    print("text filed is Empty");
+                  }
+                }
+
+            )
+          ]
+      );
+    });
+  }
+
+// add todo dialog box function end
+
 
   @override
   Widget build(BuildContext context) {
@@ -106,13 +184,28 @@ class _dashboard extends State<dashboard> {
                   );
                 }
             )
+        ),
+
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: FractionallySizedBox(
+                widthFactor: 0.9,
+                heightFactor: 0.05,
+                child: ElevatedButton(
+                    child: Text('Add Task'),
+                    onPressed: () {
+                      addNewTodo();
+                    }
+                )
+            )
         )
     );
   }
+//Empty box warning
+
+
 }
-
-
-
 
 
 
