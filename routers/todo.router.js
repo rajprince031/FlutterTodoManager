@@ -6,4 +6,6 @@ router.post('/storeTodo',ToDoController.createTodo);
 
 router.get('/getUserData',ToDoController.getUserData)
 
+router.delete('/deleteItem/:Id',ToDoController.deleteItem);
+
 module.exports = router;

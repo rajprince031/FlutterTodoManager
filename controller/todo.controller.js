@@ -35,3 +35,16 @@ exports.getUserData = async (req,res) =>{
         res.status(500).json({ status: false, message: err.message });
     }
 }
+
+exports.deleteItem = async (req,res) => {
+    try{
+    const {Id} = req.params;
+    console.log("Hello, I  am backend I am going to print id :- ",Id);
+    let response = await ToDoServices.deleteToDoItem(Id);
+    console.log("Printing the response for deletiing item ",response);
+    if(response) res.status(200).json({status:true,message:'Item deleted successfully'});
+    else res.status(404).json({status:false,message:'item not found'});  
+    }catch(error){
+        res.status(500).json({status:false,message:`error while deleting the item ${error}`});
+    }
+}

@@ -18,20 +18,23 @@ class dashboard extends StatefulWidget {
 
 class _dashboard extends State<dashboard> {
   late String Id;
-  List<dynamic>? items = [];
+  List items = [];
 
 
   @override
   void initState() {
+    print('fetch the id from the login page');
     super.initState();
     Map<String, dynamic> jwtDecodeToken = JwtDecoder.decode(widget.token);
     Id = jwtDecodeToken['_id'];
     // print("userid --------- " + Id);
     getTodo(Id);
+    print('init function end');
   }
 
 //implement the get user list from the DataBase
   void getTodo(String Id) async {
+    print('I am inside the getTodo function');
     try {
       // print("functon Id " + Id);
       var response = await http.get(
@@ -55,12 +58,15 @@ class _dashboard extends State<dashboard> {
     } catch (error) {
       print("Error occur in get Todo :- $error");
     }
+    print('getTodo function end');
   }
 
   // end the get user list function
 
-  //upload new Todo Task
+  //upload new Todo Task dialog box
   void uploadTask(String title, String description) async {
+    print('I am inside the uploadTask function');
+
     var regBody = {
       "userId": Id,
       "title": title,
@@ -81,6 +87,7 @@ class _dashboard extends State<dashboard> {
     } else {
       print("something went wrong in uploadTask Function");
     }
+    print('uploadTask function end');
   }
 
   //function of upload new Todo Task end
@@ -88,6 +95,7 @@ class _dashboard extends State<dashboard> {
 
 // add todo dialog box function start
   void addNewTodo() {
+    print('I am inside the add addNewTodo function');
     final taskController = TextEditingController();
     final descriptionController = TextEditingController();
     // bool validateTitle = false;
@@ -133,9 +141,36 @@ class _dashboard extends State<dashboard> {
           ]
       );
     });
+    print('addNewTodo function end');
   }
 
 // add todo dialog box function end
+
+
+  //delete the item from the list
+  void deleteToDoItem(item) async {
+    print('I am inside the deleteToDoItem function');
+    print(
+        'I am function I am going to print the Id :- ${item['_id']}'); //debug line
+    var id = item['_id'];
+    try {
+      var response = await http.delete(
+          Uri.parse(deleteItem + "/$id"));
+      print('Response status : - ${response.statusCode}');
+      if (response.statusCode == 200) {
+        items.remove(item);
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Item dismissed')));
+        setState(() {});
+      }
+    } catch (e) {
+      print('printing the error from the deleteToDoItem function ${e}');
+    }
+
+    print('end deleteToDoItem function');
+  }
+
+  //end delete function
 
 
   @override
@@ -173,14 +208,41 @@ class _dashboard extends State<dashboard> {
         ),
         body: Padding(
 
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+                top: 8.0, bottom: 60, left: 8.0, right: 8.0),
             child: items == null ? null : ListView.builder(
                 itemCount: items!.length,
                 itemBuilder: (context, int index) {
-                  return ListTile(
-                      leading: Text('${index}'),
-                      title: Text("${items![index]['title']}"),
-                      subtitle: Text("${items![index]['description']}")
+                  final item = items[index];
+                  return Card(
+                      elevation: 2,
+                      shadowColor: Colors.grey,
+                      child: Dismissible(
+                          key: Key(item['_id']),
+                          onDismissed: (direction) {
+                            print(
+                                'I am going to print the dismissed item :- ${item}'); //debug line
+                            deleteToDoItem(item);
+                          },
+                          background: Container(
+                              color: Colors.red,
+                              child: Icon(Icons.delete, color: Colors.white),
+                              alignment: Alignment.centerRight,
+                              padding: EdgeInsets.only(right: 20)
+                          ),
+                          child: ListTile(
+                              title: Text("${items![index]['title']}"),
+                              subtitle: Text("${items![index]['description']}"),
+                              trailing: InkWell(
+                                  child: Icon(
+                                      Icons.check_circle, size: 30,
+                                      color: Colors.green),
+                                  onTap: () {
+                                    //when click the right most check button
+                                  }
+                              )
+                          )
+                      )
                   );
                 }
             )
@@ -202,13 +264,9 @@ class _dashboard extends State<dashboard> {
         )
     );
   }
-//Empty box warning
 
 
 }
-
-
-
 
 
 
