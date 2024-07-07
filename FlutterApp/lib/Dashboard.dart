@@ -137,6 +137,12 @@ class _dashboard extends State<dashboard> {
                   }
                 }
 
+            ),
+            new ElevatedButton(
+                child: Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }
             )
           ]
       );
@@ -171,6 +177,95 @@ class _dashboard extends State<dashboard> {
   }
 
   //end delete function
+
+  //start modify function
+  void modifyTodoItem(item) {
+    print('I am inside the modifyTodoFunction :- ${item}');
+    final taskName = TextEditingController(text: item['title']);
+    final taskDesc = TextEditingController(text: item['description']);
+    bool errTitle = false;
+    bool errDesc = false;
+    try {
+      showDialog(context: context, builder: (context) {
+        return AlertDialog(
+            title: Text("Update Todo"),
+            content: SingleChildScrollView(
+                child: Column(
+                    children: [
+                      TextField(
+                          controller: taskName,
+                          decoration: InputDecoration(
+                            errorText: errTitle ? 'required' : null,
+                          )
+                      ),
+                      TextField(
+                          controller: taskDesc,
+                          decoration: InputDecoration(
+                            errorText: errDesc ? 'required' : null,
+                          )
+                      ),
+                    ]
+                )
+            ),
+            actions: [
+              new ElevatedButton(
+                  child: Text("Update"),
+                  onPressed: () {
+                    if (taskName.text.isNotEmpty && taskDesc.text.isNotEmpty) {
+                      if (taskDesc.text.toString() == item['description'] &&
+                          taskName.text.toString() == item['title']) {
+                        Navigator.of(context).pop();
+                      } else {
+                        item['title'] = taskName.text.toString();
+                        item['description'] = taskDesc.text.toString();
+                        UpdateToDo(item);
+                      }
+                    }
+                    errTitle = taskName.text.isNotEmpty ? false : true;
+                    errDesc = taskDesc.text.isNotEmpty ? false : true;
+                    Navigator.of(context).setState(() {});
+                  } //on Pressed()
+              ),
+              new ElevatedButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }
+              )
+            ]
+        );
+      }
+      );
+    } catch (error) {
+      print('printing the error of modifying the item :- ${error}');
+    }
+  }
+
+  //end modify function
+
+  //update todo function
+  void UpdateToDo(item) async {
+    print("hello I am receiving a item :- ${item}"); //debug line
+    var regBody = {
+      "_id": item["_id"],
+      "title": item["title"],
+      "description": item["description"]
+    };
+    var Id = item['_id'];
+    var response = await http.put(Uri.parse(updateItem + "/$Id"),
+        body: jsonEncode(item),
+        headers: {'Content-Type': 'application/json'}
+    );
+    print("------------->${response.body}"); //debug line
+    if (response.statusCode == 200) {
+      setState(() {
+        Navigator.of(context).pop();
+      });
+    }
+    print('end UpdateToDo function');
+  }
+
+  //end update todo function
 
 
   @override
@@ -210,8 +305,10 @@ class _dashboard extends State<dashboard> {
 
             padding: const EdgeInsets.only(
                 top: 8.0, bottom: 60, left: 8.0, right: 8.0),
+
             child: items == null ? null : ListView.builder(
                 itemCount: items!.length,
+
                 itemBuilder: (context, int index) {
                   final item = items[index];
                   return Card(
@@ -231,14 +328,22 @@ class _dashboard extends State<dashboard> {
                               padding: EdgeInsets.only(right: 20)
                           ),
                           child: ListTile(
+                              leading: Checkbox(
+                                  value: false,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+
+                                    });
+                                  }
+                              ),
                               title: Text("${items![index]['title']}"),
                               subtitle: Text("${items![index]['description']}"),
                               trailing: InkWell(
                                   child: Icon(
-                                      Icons.check_circle, size: 30,
-                                      color: Colors.green),
+                                      Icons.edit,
+                                      color: Colors.grey),
                                   onTap: () {
-                                    //when click the right most check button
+                                    modifyTodoItem(item);
                                   }
                               )
                           )
@@ -267,10 +372,3 @@ class _dashboard extends State<dashboard> {
 
 
 }
-
-
-
-
-
-
-

@@ -40,11 +40,30 @@ exports.deleteItem = async (req,res) => {
     try{
     const {Id} = req.params;
     console.log("Hello, I  am backend I am going to print id :- ",Id);
+
     let response = await ToDoServices.deleteToDoItem(Id);
     console.log("Printing the response for deletiing item ",response);
+
     if(response) res.status(200).json({status:true,message:'Item deleted successfully'});
+
     else res.status(404).json({status:false,message:'item not found'});  
+    
     }catch(error){
         res.status(500).json({status:false,message:`error while deleting the item ${error}`});
+    }
+}
+
+exports.updateItem = async (req,res) =>{
+    const item = req.body;
+    const {Id}= req.params;
+    try{
+        console.log("I am backend updating department :- ", item);
+        console.log("I am backend updating department printing Id:- ", Id);
+        let response = await ToDoServices.updateToDoItem(Id,item);
+        console.log("printing response that are come from DB--->",response);
+        if(response) res.status(200).json({status:true,message:'item updated successfully'});
+        else res.send(404).json({status:false,message:"error while try to update the item on DB"});
+    }catch(err){
+        console.log("I am printing the error :- ",err);
     }
 }

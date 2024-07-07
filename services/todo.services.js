@@ -25,8 +25,23 @@ class ToDoServices{
         return false;
        }
 
-       
+    }
+    static async updateToDoItem(Id,item){
+        console.log("I am todoservice updateToDoItem function from backend:- ",item);
+        try{
+            const response = await ToDoModel.findByIdAndUpdate(
+                {_id:Id},
+                {title : item['title'],description : item['description']}
+            );
+            console.log("Printing the previous result : - ",response);
+            const update = await ToDoModel.find({"_id":Id});
+            console.log("Printing the updated result : - ",update);
 
+            return true;
+        }catch(err){
+            console.log("Error occur updateToDoItem from backend",err);
+            return false;
+        }
     }
 }
 
