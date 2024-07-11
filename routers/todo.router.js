@@ -1,4 +1,5 @@
 const router = require('express').Router();
+
 const ToDoController = require('../controller/todo.controller')
 
 
@@ -9,5 +10,7 @@ router.get('/getUserData',ToDoController.getUserData)
 router.delete('/deleteItem/:Id',ToDoController.deleteItem);
 
 router.put('/updateItem/:Id',ToDoController.updateItem);
+
+router.put('/checkMarkUrl/:Id',ToDoController.checkMark);
 
 module.exports = router;

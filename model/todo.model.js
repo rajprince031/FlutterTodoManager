@@ -15,6 +15,10 @@ const todoSchema = new Schema({
     description:{
         type : String,
         required : true
+    },
+    taskStatus:{
+        type:Boolean,
+        default:false
     }
 
 });

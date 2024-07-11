@@ -43,6 +43,19 @@ class ToDoServices{
             return false;
         }
     }
+
+    static async checkMarkDB(Id,_taskStatus){
+            try{
+                const response = await ToDoModel.findByIdAndUpdate(
+                    {_id:Id},
+                    {taskStatus:_taskStatus}
+                );
+                return true;
+
+            }catch(error){
+                console.log('error in checkMarkDB ',error);
+            }
+    }
 }
 
 module.exports = ToDoServices;

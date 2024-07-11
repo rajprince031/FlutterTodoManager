@@ -246,11 +246,6 @@ class _dashboard extends State<dashboard> {
   //update todo function
   void UpdateToDo(item) async {
     print("hello I am receiving a item :- ${item}"); //debug line
-    var regBody = {
-      "_id": item["_id"],
-      "title": item["title"],
-      "description": item["description"]
-    };
     var Id = item['_id'];
     var response = await http.put(Uri.parse(updateItem + "/$Id"),
         body: jsonEncode(item),
@@ -267,6 +262,24 @@ class _dashboard extends State<dashboard> {
 
   //end update todo function
 
+
+  //start check mark function
+  void checkMarkItem(item) async {
+    print("i am a checkMark function -->  ${item}");
+    var Id = item['_id'];
+    var response = await http.put(Uri.parse(checkMarkUrl + "/$Id"),
+        body: jsonEncode(item),
+        headers: {'Content-Type': 'application/json'}
+    );
+    print('Response from checkMark :- ${response.body}');
+    if (response.statusCode == 200) {
+      print("mark Item successfully");
+    } else {
+      print("Error occur during marking item");
+    }
+  }
+
+  //end check mark function
 
   @override
   Widget build(BuildContext context) {
@@ -329,10 +342,15 @@ class _dashboard extends State<dashboard> {
                           ),
                           child: ListTile(
                               leading: Checkbox(
-                                  value: false,
+                                  value: items[index]['taskStatus'],
                                   onChanged: (bool? value) {
                                     setState(() {
-
+                                      print(
+                                          'The value of check box :- ${value}');
+                                      items[index]['taskStatus'] = value;
+                                      print(
+                                          'I am pressing check box :- ${items[index]}');
+                                      checkMarkItem(items[index]);
                                     });
                                   }
                               ),

@@ -66,4 +66,18 @@ exports.updateItem = async (req,res) =>{
     }catch(err){
         console.log("I am printing the error :- ",err);
     }
+
+  
+}
+
+exports.checkMark = async (req,res) => {
+    const item = req.body;
+    const {Id} = req.params;
+    try{
+        let response = await ToDoServices.checkMarkDB(Id,item.taskStatus);
+        if(response) res.statusCode(200).json({status:true,message:'item mark as complete'});
+        else res.send(404).json({status:false,message:'error while trying to mark the task'});
+    }catch(error){
+        console.log('error in check mark :- ',error);
+    }
 }
